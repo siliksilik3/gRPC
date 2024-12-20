@@ -1,0 +1,50 @@
+syntax="proto3";
+
+package notebook;
+// Users
+service UserService {
+    rpc GetUsers(Empty) returns (UsersListResponse) {}
+    rpc CreateUser(CreateUserDto) returns (UserRespone) {}
+    rpc FindUser (FindUserRequest) returns (UserRespone) {}
+    rpc DeleteUser (FindUserRequest) returns (Empty) {}
+}
+message UserRespone {
+    int32 id=1;
+    string username=2;
+}
+message CreateUserDto {
+    string username=1;
+    string password=2;
+}
+message UsersListResponse {
+    repeated UserRespone users=1;
+}
+message FindUserRequest {
+    int32 id=1;
+}
+// Posts
+service PostService {
+    rpc GetPosts (Empty) returns (PostsListResponse){}
+    rpc CreatePost (CreatePostDto) returns (PostResponse){}
+    rpc DeletePost (FindPostRequest) returns (Empty){}
+}
+message PostResponse {
+    int32 id=1;
+    string title=2;
+    string content=3;
+    UserRespone user=4; // Вложенный пользователь
+}
+
+message CreatePostDto {
+    string title=1;
+    string content=2;
+    int32 userId=3;
+}
+message PostsListResponse {
+    repeated PostResponse posts=1;
+}
+message FindPostRequest {
+    int32 id=1;
+}
+
+message Empty {}

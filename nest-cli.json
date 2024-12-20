@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/notebook/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/notebook/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/notebook",
+  "projects": {
+    "notebook": {
+      "type": "application",
+      "root": "apps/notebook",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notebook/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true 
+      }
+    },
+    "users": {
+      "type": "application",
+      "root": "apps/users",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/users/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true 
+      }
+    },
+    "posts": {
+      "type": "application",
+      "root": "apps/posts",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/posts/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true 
+      }
+    }
+  }
+}
