@@ -32,13 +32,15 @@ export class UsersService {
 
   async findUser(id: number) {
     const found = await this.prisma.user.findUnique({ where: { id } });
+
     if (!found)
       throw new HttpException(`User with id: ${id} doesn't exist`, 404);
     return found;
   }
 
   async deleteUser(id: number) {
-    await this.findUser(id);
+    // await this.findUser(id);
+
     return this.prisma.user.delete({ where: { id } });
   }
 }

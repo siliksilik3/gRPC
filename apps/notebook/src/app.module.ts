@@ -8,11 +8,21 @@ import { AppService } from './app.service';
   imports: [
     ClientsModule.register([
       {
-        name: 'notebook',
+        name: 'notebook_posts',
         transport: Transport.GRPC,
         options: {
           protoPath: join(__dirname, '../notebook.proto'),
           package: 'notebook',
+          url: 'localhost:5002',
+        },
+      },
+      {
+        name: 'notebook_users',
+        transport: Transport.GRPC,
+        options: {
+          protoPath: join(__dirname, '../notebook.proto'),
+          package: 'notebook',
+          url: 'localhost:5001',
         },
       },
     ]),

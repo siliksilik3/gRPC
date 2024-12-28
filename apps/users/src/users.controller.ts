@@ -1,12 +1,15 @@
 import { Controller } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { GrpcMethod } from '@nestjs/microservices';
-import { UsersListResponse } from 'proto/notebook';
-import { UserRespone } from 'proto/notebook';
-import { CreateUserDto } from 'proto/notebook';
-import { FindUserRequest } from 'proto/notebook';
+import { UsersService } from './users.service';
+import {
+  FindUserRequest,
+  UserRespone,
+  UsersListResponse,
+  CreateUserDto,
+  Empty,
+} from 'proto/notebook';
 
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -26,7 +29,8 @@ export class UsersController {
   }
 
   @GrpcMethod('UserService', 'DeleteUser')
-  async deleteUser(findUserRequest: FindUserRequest): Promise<void> {
+  async deleteUser(findUserRequest: FindUserRequest): Promise<Empty> {
     await this.usersService.deleteUser(findUserRequest.id);
+    return {};
   }
 }

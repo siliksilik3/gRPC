@@ -2,10 +2,9 @@ import { Controller } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import { PostsListResponse } from 'proto/notebook';
-import { PostResponse } from 'proto/notebook';
-import { CreatePostDto } from 'proto/notebook';
 import { FindUserRequest } from 'proto/notebook';
-@Controller('posts')
+
+@Controller()
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
@@ -16,12 +15,9 @@ export class PostsController {
   }
 
   @GrpcMethod('PostService', 'CreatePost')
-  async createPost(
-    createPostDto: CreatePostDto,
-    findUserRequest: FindUserRequest,
-  ): Promise<PostResponse> {
-    const { id } = findUserRequest;
-    return this.postsService.createPost(id, createPostDto);
+  async createPost(data: { userId: number; title: string; content: string }) {
+    console.log('Post Controller data: ', data);
+    return this.postsService.createPost(data);
   }
 
   @GrpcMethod('PostService', 'DeletePost')

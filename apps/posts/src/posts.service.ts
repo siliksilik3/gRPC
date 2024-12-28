@@ -17,49 +17,54 @@ export class PostsService {
     });
 
     // Преобразуем результат в нужный формат, который ожидает gRPC
-    return posts.map((post) => ({
+    const postList = posts.map((post) => ({
       id: post.id,
       title: post.title,
       content: post.content,
       user: {
-        id: post.user.id,
-        username: post.user.username, // Используем данные пользователя
+        id: post.user.id, // Используем данные пользователя
+        username: post.user.username,
       },
     }));
+    return postList;
   }
 
-  async createPost(id: number, data: CreatePostDto) {
+  async createPost(createPostData: CreatePostDto & { userId: number }) {
+    const { userId, title, content } = createPostData;
+
+    // Проверяем существование пользователя
     const userExists = await this.prisma.user.findUnique({
-      where: { id },
+      where: { id: userId },
     });
+
     if (!userExists) {
-      throw new HttpException(`User with id: ${id} doesn't exist`, 404);
+      throw new Error(`User with id: ${userId} doesn't exist`);
     }
 
+    // Создаем новый пост
     const newPost = await this.prisma.post.create({
       data: {
-        title: data.title,
-        content: data.content,
+        title,
+        content,
         user: {
-          connect: { id }, // связываем пост с пользователем
+          connect: { id: userId },
         },
       },
       include: {
         user: {
-          select: { id: true, username: true }, // Получаем пользователя с id и username
+          // Включаем данные о пользователе
+          select: { id: true, username: true },
         },
       },
     });
 
-    // Формируем объект для ответа, соответствующий типу PostResponse
+    // Возвращаем данные о посте, включая информацию о пользователе
     return {
       id: newPost.id,
       title: newPost.title,
       content: newPost.content,
-      user: {
-        id: newPost.user.id,
-        username: newPost.user.username,
-      },
+      userId: newPost.user.id, // Мы можем использовать userId или другие данные о пользователе
+      username: newPost.user.username,
     };
   }
 
